@@ -1,0 +1,17 @@
+const b=window.BEEST;
+const wa=(message)=>`https://wa.me/${b.phoneInternational}?text=${encodeURIComponent(message)}`;
+const directions=b.exactMapPin || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.directionsQuery)}`;
+const setLinks=(ids,url)=>ids.forEach(id=>{document.getElementById(id).href=url});
+setLinks(['hero-directions','visit-directions','mobile-directions'],directions);
+setLinks(['header-whatsapp','hero-whatsapp','contact-whatsapp','mobile-whatsapp'],wa('Hi Beest Athletic, I would like to ask about your jerseys and sportswear.'));
+setLinks(['confirm-visit'],wa('Hi Beest Athletic, I would like to visit. Could you share your exact shop pin and confirm when I can come by?'));
+setLinks(['ask-design'],wa('Hi Beest Athletic, I saw the PSALMS 105 FC kit on your website. Could we discuss a similar custom design?'));
+document.getElementById('contact-call').href=`tel:+${b.phoneInternational}`;
+document.getElementById('phone-display').textContent=b.phoneDisplay;
+document.getElementById('year').textContent=new Date().getFullYear();
+document.getElementById('map').src=`https://maps.google.com/maps?q=${encodeURIComponent(b.address)}&output=embed`;
+const toggle=document.querySelector('.menu-toggle'),nav=document.getElementById('nav');
+toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close menu':'Open menu')});
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open menu')}));
+document.getElementById('order-form').addEventListener('submit',event=>{event.preventDefault();const form=event.currentTarget;if(!form.reportValidity())return;const data=new FormData(form);const fields=[['Name','name'],['Team / organisation','team'],['Item','item'],['Approximate quantity','quantity'],['Colours','colours'],['Desired date','deadline'],['Design notes','notes']].map(([label,key])=>[label,String(data.get(key)||'').trim()]).filter(([,value])=>value);const message=`Hi Beest Athletic, I'd like to enquire about a custom order.\n\n${fields.map(([label,value])=>`${label}: ${value}`).join('\n')}`;window.open(wa(message),'_blank','noopener,noreferrer')});
+const gallery=document.getElementById('gallery');document.getElementById('open-gallery').addEventListener('click',()=>gallery.showModal());document.querySelector('.gallery-close').addEventListener('click',()=>gallery.close());gallery.addEventListener('click',event=>{if(event.target===gallery)gallery.close()});
